@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Calculadora de Expresiones</title>
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
   <main class="calculator">
     <h1 class="calculator__title">🧮 Calculadora de Expresiones</h1>
@@ -19,13 +21,7 @@
     <label for="input-expresion" class="calculator__label">
       Ingresa una expresión:
     </label>
-    <input
-      type="text"
-      id="input-expresion"
-      class="calculator__input"
-      placeholder="Ej: (2 + 3) * 4"
-      required
-    />
+    <input type="text" id="input-expresion" class="calculator__input" placeholder="Ej: (2 + 3) * 4" required />
 
     <!-- Botón calcular -->
     <button id="btn-calcular" class="calculator__button" type="button">
@@ -38,68 +34,12 @@
       <div id="resultado" class="calculator__resultado" aria-live="polite"></div>
 
       <!-- Botón limpiar -->
-      <button
-        id="btn-limpiar"
-        class="calculator__button"
-        style="margin-top: 10px; display: none;"
-      >
+      <button id="btn-limpiar" class="calculator__button" style="margin-top: 10px; display: none;">
         Limpiar
       </button>
     </div>
-
   </main>
 
-<script>
-  const input = document.getElementById("input-expresion");
-  const resultadoDiv = document.getElementById("resultado");
-  const respuestaContenedor = document.querySelector(".calculator__respuesta");
-  const btnCalcular = document.getElementById("btn-calcular");
-  const btnLimpiar = document.getElementById("btn-limpiar");
-
-  // Evento para calcular la expresión
-  btnCalcular.addEventListener("click", () => {
-    const expresion = input.value.trim();
-
-    if (expresion === "") {
-      resultadoDiv.textContent = "❌ Ingresa una expresión válida.";
-      respuestaContenedor.style.display = "block";
-      btnLimpiar.style.display = "none";
-      return;
-    }
-
-    // Validación simple (solo permite números, operadores y paréntesis)
-    const esValida = /^[0-9+\-*/().\s]+$/.test(expresion);
-    if (!esValida) {
-      resultadoDiv.textContent = "❌ Expresión inválida.";
-      respuestaContenedor.style.display = "block";
-      btnLimpiar.style.display = "none";
-      return;
-    }
-
-    try {
-      const resultado = eval(expresion);
-      resultadoDiv.textContent = resultado;
-      respuestaContenedor.style.display = "block";
-
-      // Mostrar y habilitar el botón limpiar
-      btnLimpiar.style.display = "inline-block";
-      btnLimpiar.disabled = false;
-
-    } catch (e) {
-      resultadoDiv.textContent = "❌ Expresión inválida.";
-      respuestaContenedor.style.display = "block";
-      btnLimpiar.style.display = "none";
-    }
-  });
-
-  // Evento para limpiar
-  btnLimpiar.addEventListener("click", () => {
-    input.value = "";
-    respuestaContenedor.style.display = "none";
-    btnLimpiar.style.display = "none";
-  });
-
-</script>
   <script src="script.js"></script>
 </body>
 </html>

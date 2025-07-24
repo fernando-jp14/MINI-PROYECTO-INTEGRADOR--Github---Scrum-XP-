@@ -1,5 +1,6 @@
 //aca hagan el test
 // es guia modifiquen este archivo si lo necesitan
+
 const { calcularExpresion } = require('./script');
 
 function test(titulo, expresion, esperado) {
@@ -11,4 +12,11 @@ function test(titulo, expresion, esperado) {
 // Casos de prueba
 test("Suma y multiplicación", "2 + 3 * 4", 14);
 test("Uso de paréntesis", "(2 + 3) * 4", 20);
-test("Expresión inválida", "2 + * 3", "Error: Expresión inválida");
+test("Expresión vacía", "", "Error: Expresión inválida");
+test("Operadores seguidos (+*)", "2 + * 3", "Error: Operadores inválidos seguidos");
+test("Operadores seguidos (++)", "2 ++ 3", "Error: Operadores inválidos seguidos");
+test("Paréntesis desbalanceados (faltante)", "(2 + 3 * 4", "Error: Paréntesis desbalanceados");
+test("Paréntesis desbalanceados (extra)", "2 + 3) * 4", "Error: Paréntesis desbalanceados");
+test("División por cero", "10 / 0", Infinity);
+test("Expresión con espacios", "  2 + 2  ", 4);
+test("Expresión inválida (letras)", "2 + a", "Error: Expresión inválida");
