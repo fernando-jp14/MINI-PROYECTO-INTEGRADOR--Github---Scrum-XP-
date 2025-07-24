@@ -47,10 +47,6 @@
       </button>
     </div>
 
-    <!-- Botón historial (sin funcionalidad) -->
-    <button id="btn-historial" class="calculator__button" type="button" style="margin-top: 20px;" disabled>
-      🕘 Ver historial
-    </button>
   </main>
 
 <script>
@@ -59,7 +55,6 @@
   const respuestaContenedor = document.querySelector(".calculator__respuesta");
   const btnCalcular = document.getElementById("btn-calcular");
   const btnLimpiar = document.getElementById("btn-limpiar");
-  const btnHistorial = document.getElementById("btn-historial");
 
   // Evento para calcular la expresión
   btnCalcular.addEventListener("click", () => {
@@ -104,11 +99,6 @@
     btnLimpiar.style.display = "none";
   });
 
-  // Evento para historial (a futuro)
-  btnHistorial.disabled = false;
-  btnHistorial.addEventListener("click", () => {
-    alert("🔧 Historial aún no está implementado.");
-  });
 </script>
 
 <script src="script.js"></script>
