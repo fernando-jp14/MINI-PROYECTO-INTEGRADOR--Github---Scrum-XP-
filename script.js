@@ -35,49 +35,56 @@ function calcularExpresion(expresion) {
   }
 }
 
+// Exportar la función para Node.js
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { calcularExpresion };
+}
 
-const input = document.getElementById("input-expresion");
-const resultadoDiv = document.getElementById("resultado");
-const respuestaContenedor = document.querySelector(".calculator__respuesta");
-const btnCalcular = document.getElementById("btn-calcular");
-const btnLimpiar = document.getElementById("btn-limpiar");
+// Solo ejecutar el código del DOM si estamos en un navegador
+if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+  const input = document.getElementById("input-expresion");
+  const resultadoDiv = document.getElementById("resultado");
+  const respuestaContenedor = document.querySelector(".calculator__respuesta");
+  const btnCalcular = document.getElementById("btn-calcular");
+  const btnLimpiar = document.getElementById("btn-limpiar");
 
-// Evento para calcular
-btnCalcular.addEventListener("click", () => {
-  const expresion = input.value.trim();
+  // Evento para calcular
+  btnCalcular.addEventListener("click", () => {
+    const expresion = input.value.trim();
 
-  if (expresion === "") {
-    mostrarError("❌ Ingresa una expresión válida.");
-    return;
-  }
+    if (expresion === "") {
+      mostrarError("❌ Ingresa una expresión válida.");
+      return;
+    }
 
-  const resultado = calcularExpresion(expresion);
+    const resultado = calcularExpresion(expresion);
 
-  if (typeof resultado === "string" && resultado.startsWith("Error")) {
-    mostrarError("❌ " + resultado.replace("Error: ", ""));
-  } else {
-    resultadoDiv.textContent = resultado;
+    if (typeof resultado === "string" && resultado.startsWith("Error")) {
+      mostrarError("❌ " + resultado.replace("Error: ", ""));
+    } else {
+      resultadoDiv.textContent = resultado;
+      respuestaContenedor.style.display = "block";
+      mostrarBotonLimpiar();
+    }
+  });
+
+  // Evento para limpiar
+  btnLimpiar.addEventListener("click", () => {
+    input.value = "";
+    respuestaContenedor.style.display = "none";
+    btnLimpiar.style.display = "none";
+  });
+
+  // Mostrar errores
+  function mostrarError(mensaje) {
+    resultadoDiv.textContent = mensaje;
     respuestaContenedor.style.display = "block";
     mostrarBotonLimpiar();
   }
-});
 
-// Evento para limpiar
-btnLimpiar.addEventListener("click", () => {
-  input.value = "";
-  respuestaContenedor.style.display = "none";
-  btnLimpiar.style.display = "none";
-});
-
-// Mostrar errores
-function mostrarError(mensaje) {
-  resultadoDiv.textContent = mensaje;
-  respuestaContenedor.style.display = "block";
-  mostrarBotonLimpiar();
-}
-
-// Mostrar botón limpiar
-function mostrarBotonLimpiar() {
-  btnLimpiar.style.display = "inline-block";
-  btnLimpiar.disabled = false;
+  // Mostrar botón limpiar
+  function mostrarBotonLimpiar() {
+    btnLimpiar.style.display = "inline-block";
+    btnLimpiar.disabled = false;
+  }
 }
