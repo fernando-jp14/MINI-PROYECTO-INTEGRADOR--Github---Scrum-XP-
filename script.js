@@ -1,10 +1,48 @@
+// Función lógica separada
+function calcularExpresion(expresion) {
+  try {
+    expresion = expresion.trim();
+
+    // Validar que solo haya números, operadores, puntos, paréntesis y espacios
+    if (!/^[\d+\-*/().\s]+$/.test(expresion)) {
+      throw new Error("Expresión inválida");
+    }
+
+    // Validar operadores seguidos como ++, **, etc.
+    if (/[*\/+\-]{2,}/.test(expresion.replace(/\s+/g, ''))) {
+      throw new Error("Operadores inválidos seguidos");
+    }
+
+    // Validar paréntesis balanceados
+    let balance = 0;
+    for (let char of expresion) {
+      if (char === '(') balance++;
+      if (char === ')') balance--;
+      if (balance < 0) throw new Error("Paréntesis desbalanceados");
+    }
+    if (balance !== 0) throw new Error("Paréntesis desbalanceados");
+
+    // Calcular resultado
+    const resultado = eval(expresion);
+
+    if (isNaN(resultado)) {
+      throw new Error("Resultado inválido");
+    }
+
+    return resultado;
+  } catch (error) {
+    return "Error: " + error.message;
+  }
+}
+
+
 const input = document.getElementById("input-expresion");
 const resultadoDiv = document.getElementById("resultado");
 const respuestaContenedor = document.querySelector(".calculator__respuesta");
 const btnCalcular = document.getElementById("btn-calcular");
 const btnLimpiar = document.getElementById("btn-limpiar");
 
-// Evento para calcular la expresión
+// Evento para calcular
 btnCalcular.addEventListener("click", () => {
   const expresion = input.value.trim();
 
@@ -13,19 +51,14 @@ btnCalcular.addEventListener("click", () => {
     return;
   }
 
-  const esValida = /^[0-9+\-*/().\s]+$/.test(expresion);
-  if (!esValida) {
-    mostrarError("❌ Expresión inválida.");
-    return;
-  }
+  const resultado = calcularExpresion(expresion);
 
-  try {
-    const resultado = eval(expresion);
+  if (typeof resultado === "string" && resultado.startsWith("Error")) {
+    mostrarError("❌ " + resultado.replace("Error: ", ""));
+  } else {
     resultadoDiv.textContent = resultado;
     respuestaContenedor.style.display = "block";
     mostrarBotonLimpiar();
-  } catch (e) {
-    mostrarError("❌ Error al calcular la expresión.");
   }
 });
 
@@ -36,14 +69,14 @@ btnLimpiar.addEventListener("click", () => {
   btnLimpiar.style.display = "none";
 });
 
-// Función para mostrar errores
+// Mostrar errores
 function mostrarError(mensaje) {
   resultadoDiv.textContent = mensaje;
   respuestaContenedor.style.display = "block";
   mostrarBotonLimpiar();
 }
 
-// Mostrar el botón limpiar
+// Mostrar botón limpiar
 function mostrarBotonLimpiar() {
   btnLimpiar.style.display = "inline-block";
   btnLimpiar.disabled = false;
