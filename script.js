@@ -1,30 +1,22 @@
 // Función lógica separada
+// Función principal
 function calcularExpresion(expresion) {
   try {
     expresion = expresion.trim();
 
-    // Validar que solo haya números, operadores, puntos, paréntesis y espacios
-    if (!/^[\d+\-*/().\s]+$/.test(expresion)) {
+    if (!esExpresionValida(expresion)) {
       throw new Error("Expresión inválida");
     }
 
-    // Validar operadores seguidos como ++, **, etc.
-    if (/[*\/+\-]{2,}/.test(expresion.replace(/\s+/g, ''))) {
+    if (operadoresSeguidosInvalidos(expresion)) {
       throw new Error("Operadores inválidos seguidos");
     }
 
-    // Validar paréntesis balanceados
-    let balance = 0;
-    for (let char of expresion) {
-      if (char === '(') balance++;
-      if (char === ')') balance--;
-      if (balance < 0) throw new Error("Paréntesis desbalanceados");
+    if (!parentesisBalanceados(expresion)) {
+      throw new Error("Paréntesis desbalanceados");
     }
-    if (balance !== 0) throw new Error("Paréntesis desbalanceados");
 
-    // Calcular resultado
     const resultado = eval(expresion);
-
     if (isNaN(resultado)) {
       throw new Error("Resultado inválido");
     }
@@ -35,12 +27,41 @@ function calcularExpresion(expresion) {
   }
 }
 
-// Exportar la función para Node.js
+// --- Funciones auxiliares de validación ---
+
+function esExpresionValida(expresion) {
+  // Solo números, operadores, puntos, paréntesis y espacios
+  return /^[\d+\-*/().\s]+$/.test(expresion);
+}
+
+function operadoresSeguidosInvalidos(expresion) {
+  const exprSinEspacios = expresion.replace(/\s+/g, '');
+
+  // Buscar todos los operadores de 2 o más caracteres
+  const operadores = exprSinEspacios.match(/[*\/+\-]{2,}/g);
+
+  if (!operadores) return false;
+
+  return operadores.some(op => op !== '**');
+}
+
+
+function parentesisBalanceados(expresion) {
+  let balance = 0;
+  for (let char of expresion) {
+    if (char === '(') balance++;
+    if (char === ')') balance--;
+    if (balance < 0) return false;
+  }
+  return balance === 0;
+}
+
+// Exportar para Node.js
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { calcularExpresion };
 }
 
-// Solo ejecutar el código del DOM si estamos en un navegador
+// Código del navegador
 if (typeof window !== 'undefined' && typeof document !== 'undefined') {
   const input = document.getElementById("input-expresion");
   const resultadoDiv = document.getElementById("resultado");
@@ -48,7 +69,6 @@ if (typeof window !== 'undefined' && typeof document !== 'undefined') {
   const btnCalcular = document.getElementById("btn-calcular");
   const btnLimpiar = document.getElementById("btn-limpiar");
 
-  // Evento para calcular
   btnCalcular.addEventListener("click", () => {
     const expresion = input.value.trim();
 
@@ -68,23 +88,21 @@ if (typeof window !== 'undefined' && typeof document !== 'undefined') {
     }
   });
 
-  // Evento para limpiar
   btnLimpiar.addEventListener("click", () => {
     input.value = "";
     respuestaContenedor.style.display = "none";
     btnLimpiar.style.display = "none";
   });
 
-  // Mostrar errores
   function mostrarError(mensaje) {
     resultadoDiv.textContent = mensaje;
     respuestaContenedor.style.display = "block";
     mostrarBotonLimpiar();
   }
 
-  // Mostrar botón limpiar
   function mostrarBotonLimpiar() {
     btnLimpiar.style.display = "inline-block";
     btnLimpiar.disabled = false;
   }
 }
+

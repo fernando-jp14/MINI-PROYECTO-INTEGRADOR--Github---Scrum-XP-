@@ -10,6 +10,7 @@ function test(titulo, expresion, esperado) {
 }
 
 // Casos de prueba
+test("Exponente", "2 ** 3", 8); // Esta prueba fallará con el código actual
 test("Suma y multiplicación", "2 + 3 * 4", 14);
 test("Uso de paréntesis", "(2 + 3) * 4", 20);
 test("Expresión vacía", "", "Error: Expresión inválida");
